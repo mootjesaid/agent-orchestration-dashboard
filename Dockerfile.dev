@@ -1,0 +1,8 @@
+FROM composer:latest
+RUN apk add --no-cache nodejs npm
+RUN composer global require laravel/cloud-cli --no-interaction
+ENV PATH="/tmp/vendor/bin:${PATH}"
+WORKDIR /app
+ENV XDEBUG_MODE=off
+EXPOSE 8000 5173
+CMD ["sh", "-c", "if [ ! -f vendor/autoload.php ]; then composer install --no-interaction --prefer-dist || exit 1; fi; exec php artisan serve --host=0.0.0.0 --port=8000"]
