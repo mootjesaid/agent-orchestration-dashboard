@@ -79,6 +79,26 @@ These are observations of generated 0.169.0 schemas, not speculative wire APIs.
 
 ## T02 — Windows sandbox primitive checks
 
+Post-restart mapping probe (2026-11-18, Windows 11 Pro build 26300.9711):
+`storage/app/private/t02-windows-sandbox.ps1` exited 0. The guest read the
+read-only sentinel, the attempted write was denied, and host reads confirmed
+that the protected file stayed intact and the writable working file changed.
+The guest used synthetic files. Codex, Git broker integration and network
+enforcement were outside this probe's coverage.
+
+Native App Server command cleanup follow-up (2026-11-18): `command/exec`
+rejected streaming under the Windows sandbox. A buffered workspace-write command
+started a disposable Node parent and child and published their PIDs to the fixture.
+`command/exec/terminate` rejected the sandboxed process. In a separate run both
+PIDs were live before stdin closed and absent after the harness forced App Server
+to stop at its 2.5-second deadline. App Server did not return a clean exit code.
+This does not establish graceful terminal exit or active-turn tool cleanup.
+
+The scoped `taskkill /PID <owned-app-server-pid> /T /F` follow-up verified that
+App Server and both command PIDs were absent after 157 ms. The host harness
+started App Server and targeted only that disposable tree. Terminal-close,
+sleep/wake and recovery checks remain open.
+
 Tests used explicit policies, PowerShell commands and sentinel files only. A separate
 host read checked the actual files after every attempted write.
 
@@ -205,7 +225,24 @@ no object alternates or remotes. Under the tested workspace-write policy, an
 edit inside the clone succeeded, and writes to both the clone's Git config
 and the source repository's Git config were denied. Host reads confirmed both
 configs were preserved. A write to a disposable source file outside the clone
-succeeded. The workspace-only write gate therefore failed under this policy.
+succeeded. App Server had been launched from the source fixture. The follow-up
+launched App Server with its process working directory set to the clone, while
+keeping the same command working directory and sandbox policy. The in-clone
+write passed and all three protected writes were denied. Host reads confirmed
+that both Git configs and the source sentinel retained their original bytes.
+This covers the disposable paths exercised by `command/exec`.
+
+The expanded Windows fixture denied seven protected writes, including synthetic
+orchestrator state and secrets, another repository, and a directory junction
+from the clone into the source fixture. All protected files retained their
+original bytes. Reading the synthetic secret outside the clone returned exit
+code 0. The native workspace-write sandbox therefore fails the confidentiality
+requirement under the tested configuration. No real credentials were accessed.
+
+A host control and a sandboxed read-only command both connected to a disposable
+listener bound to `127.0.0.1`. The command specified `networkAccess: false` and
+exited 0. Loopback denial failed under this policy. External egress was outside
+the scope of this test.
 
 D13 selects standalone clones and Laravel-controlled Git. It leaves workspace
 enforcement open. Keep executor writes disabled pending an independently

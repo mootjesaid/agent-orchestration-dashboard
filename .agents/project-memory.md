@@ -60,24 +60,36 @@ processes, active-turn interrupt, a read-only subprocess write denial, PHP 8.5.1
 stdio and bounded output, and stop of a synthetic process tree. Native review
 found tracked and untracked fixture defects. Structured reviews returned the
 expected passing, failing and incomplete verdicts. T02 still blocks unattended
-execution pending full role/Git isolation, native Codex lifecycle and deferred macOS
-validation. See docs/CAPABILITY-VALIDATION.md for exact limits. T04 is deferred
-for T05. T08 has approval for the trusted local broker slice only.
+execution pending Windows role/Git isolation and native Codex lifecycle proof.
+The user approved finishing the Windows milestone with macOS deferred to release
+validation, and continuing T08. See docs/CAPABILITY-VALIDATION.md for exact limits.
+T04 is deferred for T05.
 
 The user selected standalone executor clones and Laravel-controlled Git (D13).
-The Windows disposable clone probe denied both Git config writes and allowed a
-write outside the clone. Executor write enablement remains blocked pending an
-enforced workspace boundary.
+The first Windows clone probe allowed a write to the source fixture. Starting
+App Server inside the executor clone made the same protected write fail, while
+the in-clone write still passed. Expanded fixture writes, including a junction
+redirect, were denied. A synthetic secret outside the clone was readable, and
+a sandboxed read-only command reached host loopback with network disabled in
+its policy. The executor boundary remains open.
 
-T02 Windows Sandbox optional-feature setup returned DISM 3010 with
-`/NoRestart`. A host restart is pending. The ignored disposable mapping
-probe is staged at `storage/app/private/t02-windows-sandbox.ps1`.
+After the host restart, the T02 Windows Sandbox mapping probe passed on
+Windows 11 Pro build 26300.9711. The guest could read the protected sentinel,
+its write was denied, and host checks confirmed that the working file changed
+while the protected file stayed intact. Executor writes remain gated pending
+full role, Git broker and native Codex lifecycle validation. Native App Server
+rejected streamed `command/exec` and termination of a sandboxed command. Both
+fixture processes exited after forced shutdown. A scoped Windows process-tree
+stop later removed App Server and both fixture processes in 157 ms. Clean exit
+with an active command remains unproven.
 
 On `feature/t08-git-broker`, Artisan can prepare a standalone local clone at an
-exact commit and inspect its tracked diff and untracked paths. The required
-workspace root is supplied by the trusted local caller. Windows PHP 8.5.12
-passed Pint, PHPStan and all 67 tests with 277 assertions. T02, durable
-registration and executor integration remain open.
+exact commit and inspect its tracked diff and untracked paths. Durable
+registration records a canonical repository, common Git directory and trusted
+workspace root. Registered prepare verifies their filesystem identities under
+the broker lock. Both prepare commands check registered boundaries under the
+same lock as registration. The broker retains task clones. Q04 removal approval
+and T02 executor isolation remain open. See tasks/T08.md for verification.
 T05 is committed on `main`. The user approved T06 and directed work on `main`.
 
 ## Completed planning deliverables

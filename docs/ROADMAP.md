@@ -17,7 +17,7 @@ alone must not be interpreted as permission for every task in this roadmap.
 ## Phase 1 — capability and safety gates (Windows follow-up recorded, exit blocked)
 
 - [T01](../tasks/T01.md): pin Codex protocol/version and read-only capability evidence.
-- [T02](../tasks/T02.md): native Windows/macOS permissions, PHP stdio and process proof.
+- [T02](../tasks/T02.md): Windows milestone for native permissions, PHP stdio and process proof. macOS validation is deferred for release.
 - [T03](../tasks/T03.md): native independent review suitability and verdict contract.
 
 Windows protocol evidence includes clean cross-process thread resume and active
@@ -34,7 +34,7 @@ failed the workspace-only write check, so enabling executor writes remains gated
 - [T05](../tasks/T05.md): durable state and guarded transitions.
 - [T06](../tasks/T06.md): command journal, outbox, leases and deduplication.
 - [T07](../tasks/T07.md): stdio adapter and role-session lifecycle.
-- [T08](../tasks/T08.md): trusted local Git broker implemented. Durable registration and executor integration remain open.
+- [T08](../tasks/T08.md): trusted local Git broker and durable registration implemented. Executor integration remains gated by T02. Workspace removal requires separate approval (Q04).
 - [T09](../tasks/T09.md): context/instruction snapshots and research reuse.
 
 Exit: deterministic tests can demonstrate state safety, restricted sessions and safe

@@ -21,6 +21,7 @@ approval. This document never grants implementation permission.
 | D12 | T06 approved on main | The user approved T06 and directed work on main for this task. The remaining capability gates still apply to runtime work. |
 | D13 | Standalone executor clones and Laravel-controlled Git for the first release | The user accepted the Q03 design. Enable unattended execution only after the workspace write boundary is proven. |
 | D14 | Implement the trusted local broker while executor writes stay disabled | The user approved the broker slice. Native OS isolation and executor integration keep their existing gates. |
+| D15 | Finish the T02 Windows milestone with macOS validation deferred and continue T08 | The user approved continuing both tasks on 2026-11-18. Cross-platform release validation and enforced executor isolation still apply. |
 
 ## Proposed architectural decisions
 
@@ -49,7 +50,7 @@ are proposals, not recorded consent.
 | --- | --- | --- | --- |
 | Q01 | Resolved: next scope approved | T01-T03 capability validation only (D08) | Approval recorded 2026-11-18 |
 | Q02 | macOS OS/hardware selection deferred (D09) | Windows probe host is build 26300; choose Mac versions when hardware is available | Cross-platform T02 completion and release claims |
-| Q03 | Workspace design selected in D13. Which enforceable isolation policy can protect it? | The Windows disposable clone probe failed the workspace-only write check. Keep execution blocked while evaluating an OS-enforced boundary. | T02/T08 |
+| Q03 | Workspace design selected in D13. Which enforceable isolation policy can protect it? | The focused Windows writes were denied, but the tested native policy allowed an outside secret read and loopback access. An enforceable read and network boundary is still required. | T02/T08 |
 | Q04 | Where may task workspaces be created and how long should they remain? | Dedicated user-selected local root; keep dirty workspaces until explicit cleanup approval | T08 |
 | Q05 | Token/time budget, concurrency and review-loop defaults? | One active turn; two correction rounds; require displayed per-workflow budget; collect usage before numeric token defaults | T13/T19 |
 | Q06 | Must commits be signed; should repository hooks run? | Preserve user signing policy; inspect hooks, isolate execution and revalidate content | T17 |

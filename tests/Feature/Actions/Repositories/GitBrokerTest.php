@@ -5,12 +5,16 @@ namespace Tests\Feature\Actions\Repositories;
 use App\Actions\Repositories\GitBroker;
 use DomainException;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 use Tests\TestCase;
 
 class GitBrokerTest extends TestCase
 {
+    use RefreshDatabase;
+
     private ?string $fixture = null;
 
     protected function tearDown(): void
@@ -20,6 +24,138 @@ class GitBrokerTest extends TestCase
         }
 
         parent::tearDown();
+    }
+
+    public function test_registered_prepare_uses_the_persisted_workspace_root(): void
+    {
+        [$repository, $workspaceRoot, $base] = $this->fixture();
+
+        $this->artisan('git-broker:register', [
+            'repository' => $repository.'/.', 'workspaceRoot' => $workspaceRoot,
+        ])->assertSuccessful();
+
+        $id = DB::table('registered_repositories')->value('id');
+        $this->assertIsString($id);
+        $this->assertDatabaseHas('registered_repositories', [
+            'id' => $id,
+            'root' => realpath($repository),
+            'common_directory' => realpath($repository.'/.git'),
+            'workspace_root' => realpath($workspaceRoot),
+        ]);
+
+        $this->artisan('git-broker:prepare-registered', [
+            'registration' => $id, 'base' => $base, 'branch' => 'feature/registered',
+        ])->assertSuccessful();
+
+        $workspaces = glob($workspaceRoot.'/task-*', GLOB_ONLYDIR);
+        $this->assertIsArray($workspaces);
+        $this->assertCount(1, $workspaces);
+        $this->assertSame($base, $this->git($workspaces[0], ['rev-parse', 'HEAD']));
+    }
+
+    public function test_registration_cannot_be_replaced_by_registering_the_same_root_again(): void
+    {
+        [$repository, $workspaceRoot] = $this->fixture();
+        $broker = new GitBroker;
+        $broker->register($repository, $workspaceRoot);
+
+        try {
+            $broker->register($repository.'/.', $workspaceRoot);
+            $this->fail('Expected duplicate registration to be rejected.');
+        } catch (DomainException $exception) {
+            $this->assertSame('The repository is already registered.', $exception->getMessage());
+        }
+
+        $this->assertDatabaseCount('registered_repositories', 1);
+    }
+
+    public function test_registered_prepare_rejects_a_changed_git_common_directory(): void
+    {
+        [$repository, $workspaceRoot, $base] = $this->fixture();
+        $broker = new GitBroker;
+        $id = $broker->register($repository, $workspaceRoot);
+        $this->git($repository, ['init', '--separate-git-dir', dirname($repository).'/moved-metadata']);
+
+        try {
+            $broker->prepareRegistered($id, $base, 'feature/registered');
+            $this->fail('Expected a changed common directory to be rejected.');
+        } catch (DomainException $exception) {
+            $this->assertSame('The registered repository or workspace root changed.', $exception->getMessage());
+        }
+
+        $this->assertSame([], glob($workspaceRoot.'/task-*'));
+    }
+
+    public function test_registered_prepare_rejects_replacing_a_repository_at_the_same_path(): void
+    {
+        [$repository, $workspaceRoot, $base] = $this->fixture();
+        $broker = new GitBroker;
+        $id = $broker->register($repository, $workspaceRoot);
+        $originalPath = $repository.'-original';
+        $this->assertTrue(rename($repository, $originalPath));
+        $this->git(dirname($repository), ['clone', '--no-local', '--', $originalPath, $repository]);
+
+        try {
+            $broker->prepareRegistered($id, $base, 'feature/registered');
+            $this->fail('Expected the replacement repository to be rejected.');
+        } catch (DomainException $exception) {
+            $this->assertSame('A registered directory was replaced.', $exception->getMessage());
+        }
+
+        $this->assertSame([], glob($workspaceRoot.'/task-*'));
+    }
+
+    public function test_registration_keeps_workspaces_separate_from_other_registered_repositories(): void
+    {
+        [$repository, $workspaceRoot] = $this->fixture();
+        $broker = new GitBroker;
+        $broker->register($repository, $workspaceRoot);
+
+        $otherRepository = $repository.'-other';
+        $nestedWorkspace = $repository.'/nested-workspace';
+        mkdir($nestedWorkspace);
+        $this->git(dirname($repository), ['clone', '--no-local', '--', $repository, $otherRepository]);
+
+        try {
+            $broker->register($otherRepository, $nestedWorkspace);
+            $this->fail('Expected a workspace inside a registered repository to be rejected.');
+        } catch (DomainException $exception) {
+            $this->assertStringContainsString('workspace root overlaps a registered repository', $exception->getMessage());
+        }
+
+        $nestedRepository = $workspaceRoot.'/nested-repository';
+        $otherWorkspace = $workspaceRoot.'-other';
+        mkdir($otherWorkspace);
+        $this->git(dirname($repository), ['clone', '--no-local', '--', $repository, $nestedRepository]);
+
+        try {
+            $broker->register($nestedRepository, $otherWorkspace);
+            $this->fail('Expected a repository inside a registered workspace root to be rejected.');
+        } catch (DomainException $exception) {
+            $this->assertStringContainsString('overlaps a registered workspace root', $exception->getMessage());
+        }
+
+        $this->assertDatabaseCount('registered_repositories', 1);
+    }
+
+    public function test_ad_hoc_prepare_rejects_a_workspace_inside_another_registered_repository(): void
+    {
+        [$repository, $workspaceRoot, $base] = $this->fixture();
+        $broker = new GitBroker;
+        $broker->register($repository, $workspaceRoot);
+        $otherRepository = $repository.'-other';
+        $this->git(dirname($repository), ['clone', '--no-local', '--', $repository, $otherRepository]);
+        $nestedWorkspace = $repository.'/nested-workspace';
+        mkdir($nestedWorkspace);
+
+        try {
+            $broker->prepare($otherRepository, $nestedWorkspace, $base, 'feature/sample');
+            $this->fail('Expected preparation inside a registered repository to be rejected.');
+        } catch (DomainException $exception) {
+            $this->assertStringContainsString('workspace root overlaps a registered repository', $exception->getMessage());
+        }
+
+        $this->assertSame([], glob($nestedWorkspace.'/task-*'));
     }
 
     public function test_artisan_prepares_a_private_clone_and_inspects_changes_without_touching_the_source(): void

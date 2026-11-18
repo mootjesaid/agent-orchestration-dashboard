@@ -15,6 +15,18 @@ Schedule::call(fn () => SweepRunnerOutbox::dispatchSync())
     ->name('sweep-runner-outbox')
     ->everyTenSeconds();
 
+Artisan::command('git-broker:register {repository} {workspaceRoot}', function (GitBroker $broker, string $repository, string $workspaceRoot): int {
+    $this->line($broker->register($repository, $workspaceRoot));
+
+    return 0;
+})->purpose('Register a repository and its dedicated workspace root');
+
+Artisan::command('git-broker:prepare-registered {registration} {base} {branch}', function (GitBroker $broker, string $registration, string $base, string $branch): int {
+    $this->line($broker->prepareRegistered($registration, $base, $branch));
+
+    return 0;
+})->purpose('Prepare a task clone using a registered workspace root');
+
 Artisan::command('git-broker:prepare {repository} {workspaceRoot} {base} {branch}', function (
     GitBroker $broker,
     string $repository,
