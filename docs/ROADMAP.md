@@ -1,7 +1,7 @@
 # Implementation roadmap
 
 Updated 2026-11-18. T01-T03 capability validation is approved and partially exercised;
-T04 onward remains proposed, unapproved and unstarted. Measured evidence is in
+T05 is approved with T04 deferred for that task. T06 onward remains proposed. Measured evidence is in
 [CAPABILITY-VALIDATION.md](CAPABILITY-VALIDATION.md). Detailed criteria/dependencies are
 in the [task index](../tasks/README.md); pending choices in [DECISIONS.md](DECISIONS.md).
 

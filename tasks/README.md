@@ -1,7 +1,8 @@
 # Implementation task index
 
 T01-T03 capability validation is approved and partially exercised; see
-[measured results](../docs/CAPABILITY-VALIDATION.md). T04-T23 remain unapproved.
+[measured results](../docs/CAPABILITY-VALIDATION.md). T05 is approved with T04
+deferred for this task. T06-T23 remain unapproved.
 Task existence alone does not authorize execution.
 See [roadmap](../docs/ROADMAP.md) for gates and [decisions](../docs/DECISIONS.md) for user input.
 Task links and dependency order:
@@ -12,7 +13,7 @@ Task links and dependency order:
 | [T02](T02.md) | Native isolation and process proof | T01 |
 | [T03](T03.md) | Native review suitability proof | T01, T02 |
 | [T04](T04.md) | Existing starter and native runtime baseline | T01, T02, T03 |
-| [T05](T05.md) | Durable workflow state and transitions | T04 |
+| [T05](T05.md) | Durable workflow state and transitions | T04 deferred by user |
 | [T06](T06.md) | Command journal outbox and leases | T05 |
 | [T07](T07.md) | Codex stdio runner and session lifecycle | T02, T06 |
 | [T08](T08.md) | Repository registration and Git broker | T02, T05 |

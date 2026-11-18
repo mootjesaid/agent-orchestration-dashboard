@@ -1,6 +1,6 @@
 # Project memory
 
-Updated: 2026-11-18. Phase: T01-T03 capability validation approved and in progress.
+Updated: 2026-11-18. Phase: T05 implemented and reviewed. T01-T03 capability validation remains in progress.
 
 ## Product
 
@@ -17,7 +17,7 @@ with a React/TypeScript/Inertia dashboard. Natural-language request -> clarifica
 - Automatic commits OFF by default; task-level human review always wins.
 - User approved T01-T03 capability validation on 2026-11-18 after the planning handoff.
   Disposable protocol/isolation/review experiments are authorized; product functionality,
-  dependency changes and T04 onward remain unapproved. The user separately approved
+  dependency changes and later tasks require separate approval. The user subsequently approved T05 and deferred T04 for it. The user separately approved
   PHP 8.5 setup on 2026-11-18; the existing installation was configured successfully.
 
 ## Repository facts
@@ -56,13 +56,13 @@ Subscription usage is not an exact dollar bill.
 - Gates and task index: `docs/ROADMAP.md`, `tasks/README.md`
 
 T01-T03 are approved, not complete. Windows metadata/model-turn/sandbox-primitive/
-custom-review probes were exercised. T04 onward remain unapproved. Native PHP resolves
+custom-review probes were exercised. T04 is deferred for T05. T06 onward remain unapproved. Native PHP resolves
 to C:/tools/php83/php.exe (8.3.8) before setup. This prerequisite is now resolved:
 the existing Herd Lite PHP 8.5.12 is preferred in user PowerShell sessions via
 Documents/WindowsPowerShell/profile.ps1. User deferred Mac validation; FR16 is not
 waived. Next: finish the remaining Windows isolation/process/review matrices under
-the existing T01-T03 authorization; do not advance to T04/product functionality.
-Current branch: `docs/orchestrator-product-plan`. Documentation is uncommitted.
+the existing T01-T03 authorization. T05 has separate approval and is complete.
+Current branch: `feature/t05-workflow-state`. T05 changes are uncommitted.
 
 ## Completed planning deliverables
 
@@ -116,3 +116,13 @@ reported SQLite is 3.45.2. A bounded no-file-write Symfony Process 8.1.10 probe 
 two-way asynchronous stdin/stdout (PING then PONG, exit 0). This is not full Codex
 runner, process-tree cleanup, sandbox or recovery validation. No PHP source file was
 modified, and no application tests/migrations/dependency installation were run.
+
+## T05 workflow state (2026-11-18)
+
+The user approved T05 and deferred its T04 dependency. Implemented the SQLite
+workflow, immutable request revision and audit tables, plus a version-guarded Laravel
+action for creation, clarification, amendments and entry into planning. Approval
+and execution belong to later tasks. On Windows PHP 8.5.12, Pint and eight focused
+PHPUnit tests passed (32 assertions), including rollback and a two-connection SQLite
+version race. Native read-only Codex follow-up review reported no remaining
+findings. macOS validation remains deferred. T06 onward requires approval.
