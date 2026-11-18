@@ -53,6 +53,15 @@ This runtime approval does not authorize application/package changes or T04+.
 
 ## Spec-driven delivery
 
+Use the existing roadmap and task acceptance criteria as the plan. Start the next
+approved task directly. Revisit the plan only when new evidence affects the task.
+Run the narrowest checks that cover the change once. After a fix, rerun only the
+affected checks unless required coverage or a concrete regression calls for more.
+Use one focused independent review where required. Request another pass only when
+the review gate requires it or a fix materially changes the reviewed behavior.
+Report blockers where they affect the work, and continue approved work that can
+proceed independently.
+
 Update the relevant specification and acceptance criteria before changing behavior.
 Implement one approved, reviewable task at a time. Record actual tests and limitations;
 do not claim platform or protocol checks that were not run. Keep research concise,

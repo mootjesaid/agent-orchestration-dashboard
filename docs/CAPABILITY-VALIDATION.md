@@ -168,4 +168,45 @@ unattended execution enablement or cross-platform support claim is justified yet
    approved; it does not waive release FR16.
 
 No application functionality, agents/orchestration code, dependency changes, package
-installation, application commit, push, merge or deployment was performed.
+installation, application commit, push, merge or deployment was performed in these probes.
+
+## Windows follow-up
+
+Codex CLI 0.169.0 and PHP 8.5.12 were exercised using disposable repositories,
+synthetic input, and the existing sign-in. The Node harness and PHP/Symfony
+process probe are retained under ignored `storage/app/private/` as
+`phase1-followup.cjs` and `phase1-process.php`.
+
+| Gate | Measured result | Limit |
+| --- | --- | --- |
+| T01 persistent resume | A marker turn completed, its App Server exited with code 0 after stdin closed, and a second App Server process resumed the same thread ID | Clean restart only |
+| T02 child isolation | A Node parent launched a child that read a disposable path containing spaces and Unicode. The attempted write was denied and a host read confirmed original bytes | One read-only subprocess path |
+| T02 PHP/Symfony stdio | Both input messages received their expected output. Closing stdin exited cleanly. PCNTL was absent | Synthetic PHP child |
+| T02 bounded output | Received 2,097,152 bytes and retained 4,096 bytes. Child exited 0 | Synthetic stdout burst |
+| T02 process-tree stop | Scoped Windows `taskkill /T /F` returned 0 for an owned two-process PHP fixture. Both recorded PIDs were absent afterward | Synthetic tree, no Codex descendant or terminal-close proof |
+| T02 protocol interrupt | An interrupt after the first output delta returned terminal status `interrupted`. A separate immediate interrupt reported no active turn and the turn completed | Active model output only, no in-flight tool or permission request |
+| T03 native review | Fresh read-only `review/start` on an uncommitted fixture found a tracked age-boundary defect and an untracked zero-boundary defect. The binary was checked for change status and size | Native output was a string. Binary semantics and base-branch targeting were unverified |
+| T03 structured fallback | Fresh read-only turns with `outputSchema` returned `pass`, `changes_required`, and `inconclusive` for the passing, failing and incomplete fixtures | Small synthetic schema only |
+| T03 invalid evidence | The probe validator mapped malformed, missing, interrupted and mismatched evidence to `inconclusive` | Injected validator inputs, no product adapter |
+
+Use native review for supplemental findings. Require a fresh, independent,
+schema-validated review turn for a machine verdict, tied to the exact reviewed
+snapshot and trusted test evidence. Human review is the fallback when validation
+or coverage is incomplete. Keep unattended execution blocked until T02 proves
+the full isolation and lifecycle boundary. Remaining evidence includes MCP/tool
+and Git-broker isolation, native Codex descendant cleanup, permission-request
+recovery, terminal close, sleep/wake, and deferred macOS validation.
+
+### Standalone executor clone
+
+On native Windows with Codex CLI 0.169.0, an independent local clone used its
+own Git directory as both Git and common metadata directory. The fixture had
+no object alternates or remotes. Under the tested workspace-write policy, an
+edit inside the clone succeeded, and writes to both the clone's Git config
+and the source repository's Git config were denied. Host reads confirmed both
+configs were preserved. A write to a disposable source file outside the clone
+succeeded. The workspace-only write gate therefore failed under this policy.
+
+D13 selects standalone clones and Laravel-controlled Git. It leaves workspace
+enforcement open. Keep executor writes disabled pending an independently
+verified Windows boundary and the remaining native checks.

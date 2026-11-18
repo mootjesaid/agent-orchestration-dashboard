@@ -1,8 +1,9 @@
 # Implementation task index
 
-T01-T03 capability validation is approved and partially exercised; see
-[measured results](../docs/CAPABILITY-VALIDATION.md). T05 is approved with T04
-deferred for this task. T06 has separate approval. T07-T23 remain unapproved.
+Phase 1 has Windows protocol and review results. The native isolation gate remains
+blocked. See [measured results](../docs/CAPABILITY-VALIDATION.md). T05 is approved with T04
+deferred for this task. T06 has separate approval. T08 is approved for the
+trusted local broker slice. Other later tasks remain unapproved.
 Task existence alone does not authorize execution.
 See [roadmap](../docs/ROADMAP.md) for gates and [decisions](../docs/DECISIONS.md) for user input.
 Task links and dependency order:

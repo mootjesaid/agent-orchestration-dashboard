@@ -1,6 +1,6 @@
 # Implementation roadmap
 
-Updated 2026-11-18. T01-T03 capability validation is approved and partially exercised;
+Updated 2026-11-18. Phase 1 has Windows protocol and review evidence; the native isolation gate remains blocked.
 T05 is approved with T04 deferred for that task. T06 has separate approval. T07 onward remains proposed. Measured evidence is in
 [CAPABILITY-VALIDATION.md](CAPABILITY-VALIDATION.md). Detailed criteria/dependencies are
 in the [task index](../tasks/README.md); pending choices in [DECISIONS.md](DECISIONS.md).
@@ -14,16 +14,19 @@ code, installations, executable role configurations or commits are part of this 
 Exit: user reviews findings and selects the next approved scope. Approval of a document
 alone must not be interpreted as permission for every task in this roadmap.
 
-## Phase 1 — capability and safety gates (approved, in progress)
+## Phase 1 — capability and safety gates (Windows follow-up recorded, exit blocked)
 
 - [T01](../tasks/T01.md): pin Codex protocol/version and read-only capability evidence.
 - [T02](../tasks/T02.md): native Windows/macOS permissions, PHP stdio and process proof.
 - [T03](../tasks/T03.md): native independent review suitability and verdict contract.
 
-Exit: record pass/fail per capability and platform, decide transport/isolation/review
-fallbacks. Failure of read-only/Git enforcement or native lifecycle blocks autonomous
-execution design. Resolve Q02/Q03 and revise the plan before continuing if necessary.
-Recommendation: approve only this bounded phase next; no Laravel reinstall is needed.
+Windows protocol evidence includes clean cross-process thread resume and active
+turn interruption. Use native review for supplemental findings and an independent
+structured turn for a machine verdict, with human review when evidence is incomplete.
+Unattended execution remains blocked pending T02's full role, Git and native
+lifecycle proofs. macOS validation remains deferred under Q02. Q03 selects
+standalone executor clones and Laravel-controlled Git. The Windows clone probe
+failed the workspace-only write check, so enabling executor writes remains gated.
 
 ## Phase 2 — durable local foundation
 
@@ -31,7 +34,7 @@ Recommendation: approve only this bounded phase next; no Laravel reinstall is ne
 - [T05](../tasks/T05.md): durable state and guarded transitions.
 - [T06](../tasks/T06.md): command journal, outbox, leases and deduplication.
 - [T07](../tasks/T07.md): stdio adapter and role-session lifecycle.
-- [T08](../tasks/T08.md): repository registration, feature branches/workspaces and Git broker.
+- [T08](../tasks/T08.md): trusted local Git broker implemented. Durable registration and executor integration remain open.
 - [T09](../tasks/T09.md): context/instruction snapshots and research reuse.
 
 Exit: deterministic tests can demonstrate state safety, restricted sessions and safe

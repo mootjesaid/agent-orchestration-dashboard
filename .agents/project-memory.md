@@ -1,6 +1,6 @@
 # Project memory
 
-Updated: 2026-11-18. Phase: T06 implemented, independently reviewed and verified. T01-T03 capability validation remains in progress.
+Updated: 2026-11-18. Phase 1 Windows follow-up recorded. Native isolation exit remains blocked. T06 is implemented, independently reviewed and verified.
 
 ## Product
 
@@ -55,13 +55,25 @@ Subscription usage is not an exact dollar bill.
 - Decisions requiring input: `docs/DECISIONS.md`
 - Gates and task index: `docs/ROADMAP.md`, `tasks/README.md`
 
-T01-T03 are approved, not complete. Windows metadata/model-turn/sandbox-primitive/
-custom-review probes were exercised. T04 is deferred for T05. T07 onward remain unapproved. Native PHP resolves
-to C:/tools/php83/php.exe (8.3.8) before setup. This prerequisite is now resolved:
-the existing Herd Lite PHP 8.5.12 is preferred in user PowerShell sessions via
-Documents/WindowsPowerShell/profile.ps1. User deferred Mac validation; FR16 is not
-waived. Next: finish the remaining Windows isolation/process/review matrices under
-the existing T01-T03 authorization. T05 has separate approval and is complete.
+The Phase 1 Windows follow-up verified persistent thread resume across App Server
+processes, active-turn interrupt, a read-only subprocess write denial, PHP 8.5.12
+stdio and bounded output, and stop of a synthetic process tree. Native review
+found tracked and untracked fixture defects. Structured reviews returned the
+expected passing, failing and incomplete verdicts. T02 still blocks unattended
+execution pending full role/Git isolation, native Codex lifecycle and deferred macOS
+validation. See docs/CAPABILITY-VALIDATION.md for exact limits. T04 is deferred
+for T05. T08 has approval for the trusted local broker slice only.
+
+The user selected standalone executor clones and Laravel-controlled Git (D13).
+The Windows disposable clone probe denied both Git config writes and allowed a
+write outside the clone. Executor write enablement remains blocked pending an
+enforced workspace boundary.
+
+On `feature/t08-git-broker`, Artisan can prepare a standalone local clone at an
+exact commit and inspect its tracked diff and untracked paths. The required
+workspace root is supplied by the trusted local caller. Windows PHP 8.5.12
+passed Pint, PHPStan and all 67 tests with 277 assertions. T02, durable
+registration and executor integration remain open.
 T05 is committed on `main`. The user approved T06 and directed work on `main`.
 
 ## Completed planning deliverables

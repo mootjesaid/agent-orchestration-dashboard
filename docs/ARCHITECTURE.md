@@ -44,9 +44,15 @@ edit code, manufacture user approval or directly invoke unrestricted Git.
 | Scheduler | Select ready tasks, reserve slots and assign role sessions | MVP one global execution slot; no model-created hidden work |
 | Codex adapter | Normalize pinned protocol requests/events | Only this adapter knows wire field names |
 | Runner | Own stdio, command journal consumption, bounded buffers, deadlines, heartbeats | No workflow policy in the transport loop |
-| Git broker | Validate repository/worktree identity and execute scoped Git actions | Sole authorized repository-metadata writer |
+| Git broker | Validate repository and executor clone identity and execute scoped Git actions | Sole authorized repository-metadata writer |
 | Verification/review services | Run approved checks and validate independent verdicts | Evidence bound to exact content snapshot |
 | Timeline/read models | Paginated projections and reconnect catch-up | UI cannot alter authoritative state |
+
+For first-release execution, the Laravel Git broker prepares a standalone clone
+from the approved base with private Git metadata and object storage. The broker
+creates the task branch and verifies the resulting diff. Executor write access
+is limited to the clone's working files by an independently verified isolation
+policy. The Windows clone probe left this policy gate open.
 
 Proposed placement: actions in `app/Actions`, contracts/services in existing Laravel
 `app/` conventions, jobs in `app/Jobs`, console runner in `app/Console/Commands`,

@@ -19,8 +19,15 @@ approval. This document never grants implementation permission.
 | D10 | PHP 8.5 setup authorized and completed | User approved setup on 2026-11-18; existing Herd Lite PHP 8.5.12 selected through user PowerShell profile, no reinstall/dependency change |
 | D11 | T05 approved with T04 deferred | User asked to start T05 and explicitly deferred T04 on 2026-11-18. The remaining capability gates still apply to runtime work. |
 | D12 | T06 approved on main | The user approved T06 and directed work on main for this task. The remaining capability gates still apply to runtime work. |
+| D13 | Standalone executor clones and Laravel-controlled Git for the first release | The user accepted the Q03 design. Enable unattended execution only after the workspace write boundary is proven. |
+| D14 | Implement the trusted local broker while executor writes stay disabled | The user approved the broker slice. Native OS isolation and executor integration keep their existing gates. |
 
 ## Proposed architectural decisions
+
+The Phase 1 Windows probes support native review as supplemental evidence and
+an independent schema-constrained turn for machine verdicts. Human review
+remains the fallback for incomplete evidence. Q02 and Q03 still gate unattended
+execution. See [capability results](CAPABILITY-VALIDATION.md).
 
 | ID | Proposal | Why / alternative |
 | --- | --- | --- |
@@ -42,7 +49,7 @@ are proposals, not recorded consent.
 | --- | --- | --- | --- |
 | Q01 | Resolved: next scope approved | T01-T03 capability validation only (D08) | Approval recorded 2026-11-18 |
 | Q02 | macOS OS/hardware selection deferred (D09) | Windows probe host is build 26300; choose Mac versions when hardware is available | Cross-platform T02 completion and release claims |
-| Q03 | What isolation setup is acceptable if Codex sandbox cannot protect shared Git metadata? | Require proven OS restrictions or an isolated checkout; stop rather than weaken policy; discuss any admin setup first | T02/T08 |
+| Q03 | Workspace design selected in D13. Which enforceable isolation policy can protect it? | The Windows disposable clone probe failed the workspace-only write check. Keep execution blocked while evaluating an OS-enforced boundary. | T02/T08 |
 | Q04 | Where may task workspaces be created and how long should they remain? | Dedicated user-selected local root; keep dirty workspaces until explicit cleanup approval | T08 |
 | Q05 | Token/time budget, concurrency and review-loop defaults? | One active turn; two correction rounds; require displayed per-workflow budget; collect usage before numeric token defaults | T13/T19 |
 | Q06 | Must commits be signed; should repository hooks run? | Preserve user signing policy; inspect hooks, isolate execution and revalidate content | T17 |
