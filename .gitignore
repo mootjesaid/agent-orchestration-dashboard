@@ -43,3 +43,17 @@ yarn-error.log
 /boost.json
 /opencode.json
 /opencode.jsonc
+
+# Keep product instructions and planning memory versioned; generated skills stay ignored.
+!/AGENTS.md
+!/.agents/
+/.agents/*
+!/.agents/README.md
+!/.agents/project-memory.md
+
+# Keep product instructions and planning memory versioned; generated skills stay ignored.
+!/AGENTS.md
+!/.agents/
+/.agents/*
+!/.agents/README.md
+!/.agents/project-memory.md
