@@ -117,6 +117,22 @@ effect and SQLite cannot share a transaction. Record intent before sending and
 record acknowledgement after; an ambiguous send enters reconciliation. Do not
 blindly resend turn starts, Git commits or permission grants after a lost response.
 
+T06 implements the planning-command boundary in SQLite. The planning event,
+journal and outbox share a transaction. The scheduled sweep processes indexed
+batches of up to 100 rows per phase and checks a five-second monotonic budget
+between phases. SQLite uses immediate write transactions with a one-second
+lock wait. The initial command deadline is two minutes. The runner lease is renewable
+for 30 seconds at a time and remains reserved after expiry. A trusted supervisor
+must verify process-tree exit before releasing that generation. T07 supplies the
+wire adapter and native process lifecycle.
+
+Run `php artisan schedule:work` alongside `composer dev` for local publication
+and reconciliation. An amendment that would supersede a claimed planning
+command waits for acknowledgement or verified shutdown of the claiming runner.
+Planning workflows that predate the journal enter reconciliation during
+migration. The publication batch selects live commands by deadline so that
+expired work can be reconciled without delaying publication.
+
 Use per-repository Git locks, runner fencing generations and an OS-enforced single
 writer boundary. Lease expiry alone does not stop an old process from writing: kill
 or positively fence it before admitting a replacement. On lost heartbeat mark work

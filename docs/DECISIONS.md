@@ -18,6 +18,7 @@ approval. This document never grants implementation permission.
 | D09 | Defer native macOS validation | User requested Mac checks later on 2026-11-18; no cross-platform acceptance claim until tested |
 | D10 | PHP 8.5 setup authorized and completed | User approved setup on 2026-11-18; existing Herd Lite PHP 8.5.12 selected through user PowerShell profile, no reinstall/dependency change |
 | D11 | T05 approved with T04 deferred | User asked to start T05 and explicitly deferred T04 on 2026-11-18. The remaining capability gates still apply to runtime work. |
+| D12 | T06 approved on main | The user approved T06 and directed work on main for this task. The remaining capability gates still apply to runtime work. |
 
 ## Proposed architectural decisions
 

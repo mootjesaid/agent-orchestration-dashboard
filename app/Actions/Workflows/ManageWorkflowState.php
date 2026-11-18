@@ -11,6 +11,8 @@ use InvalidArgumentException;
 
 class ManageWorkflowState
 {
+    public function __construct(private ManageRunnerCommands $runnerCommands = new ManageRunnerCommands) {}
+
     /**
      * Actor and cause are supplied by trusted Laravel callers for attribution.
      */
@@ -92,6 +94,14 @@ class ManageWorkflowState
             }
 
             $this->appendEvent($workflowId, $version, $revision, $command->value, $previous, $next, $actor, $cause);
+
+            if ($command === WorkflowCommand::BeginPlanning) {
+                $this->runnerCommands->recordPlanning($workflowId, $version);
+            }
+
+            if ($previous === WorkflowStatus::Planning) {
+                $this->runnerCommands->supersedePlanning($workflowId, $expectedVersion);
+            }
         });
 
         return $version;

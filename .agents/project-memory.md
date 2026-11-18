@@ -1,6 +1,6 @@
 # Project memory
 
-Updated: 2026-11-18. Phase: T05 implemented and reviewed. T01-T03 capability validation remains in progress.
+Updated: 2026-11-18. Phase: T06 implemented, independently reviewed and verified. T01-T03 capability validation remains in progress.
 
 ## Product
 
@@ -56,13 +56,13 @@ Subscription usage is not an exact dollar bill.
 - Gates and task index: `docs/ROADMAP.md`, `tasks/README.md`
 
 T01-T03 are approved, not complete. Windows metadata/model-turn/sandbox-primitive/
-custom-review probes were exercised. T04 is deferred for T05. T06 onward remain unapproved. Native PHP resolves
+custom-review probes were exercised. T04 is deferred for T05. T07 onward remain unapproved. Native PHP resolves
 to C:/tools/php83/php.exe (8.3.8) before setup. This prerequisite is now resolved:
 the existing Herd Lite PHP 8.5.12 is preferred in user PowerShell sessions via
 Documents/WindowsPowerShell/profile.ps1. User deferred Mac validation; FR16 is not
 waived. Next: finish the remaining Windows isolation/process/review matrices under
 the existing T01-T03 authorization. T05 has separate approval and is complete.
-Current branch: `feature/t05-workflow-state`. T05 changes are uncommitted.
+T05 is committed on `main`. The user approved T06 and directed work on `main`.
 
 ## Completed planning deliverables
 
@@ -125,4 +125,13 @@ action for creation, clarification, amendments and entry into planning. Approval
 and execution belong to later tasks. On Windows PHP 8.5.12, Pint and eight focused
 PHPUnit tests passed (32 assertions), including rollback and a two-connection SQLite
 version race. Native read-only Codex follow-up review reported no remaining
-findings. macOS validation remains deferred. T06 onward requires approval.
+findings. macOS validation remains deferred.
+
+## T06 command journal, outbox and leases
+
+Entering planning now stores command intent and outbox publication state in the
+workflow transaction. A bounded SQLite sweep publishes commands and flags expired
+or superseded commands for reconciliation. A generation can be replaced only
+after trusted process-stop confirmation. T07 owns native process verification and
+wire dispatch. Windows PHP 8.5.12 verification passed Pint, PHPStan and all 62
+Laravel tests with 249 assertions. See tasks/T06.md for review and limitations.
