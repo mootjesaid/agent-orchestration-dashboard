@@ -69,6 +69,10 @@ The Windows disposable clone probe denied both Git config writes and allowed a
 write outside the clone. Executor write enablement remains blocked pending an
 enforced workspace boundary.
 
+T02 Windows Sandbox optional-feature setup returned DISM 3010 with
+`/NoRestart`. A host restart is pending. The ignored disposable mapping
+probe is staged at `storage/app/private/t02-windows-sandbox.ps1`.
+
 On `feature/t08-git-broker`, Artisan can prepare a standalone local clone at an
 exact commit and inspect its tracked diff and untracked paths. The required
 workspace root is supplied by the trusted local caller. Windows PHP 8.5.12
